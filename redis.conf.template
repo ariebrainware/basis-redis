@@ -1,0 +1,7 @@
+# Redis config template. `REDIS_PASSWORD` will be substituted at container start.
+bind 0.0.0.0
+protected-mode yes
+requirepass ${REDIS_PASSWORD}
+dir /data
+save 900 1
+appendonly yes
