@@ -17,6 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set SHORT_SHA
+        id: set_short_sha
+        run: |
+          echo "short=${GITHUB_SHA:0:7}" >> $GITHUB_OUTPUT
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -38,13 +43,13 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}:${{ steps.set_short_sha.outputs.short }}
 
       - name: Deploy to self-hosted runner
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         run: |
           set -euo pipefail
-          IMAGE=ghcr.io/${{ github.repository }}:${{ github.sha }}
+          IMAGE=ghcr.io/${{ github.repository }}:${{ steps.set_short_sha.outputs.short }}
           LATEST=ghcr.io/${{ github.repository }}:latest
 
           echo "Logging in to GitHub Container Registry"
