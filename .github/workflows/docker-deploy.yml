@@ -60,5 +60,6 @@ jobs:
           docker run -d \
             --name basis-redis \
             --restart unless-stopped \
+            -v /var/lib/basis-redis-data:/data \
             -p 6379:6379 \
             "$IMAGE"
