@@ -62,4 +62,3 @@ jobs:
             --restart unless-stopped \
             -p 6379:6379 \
             "$IMAGE"
-            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
