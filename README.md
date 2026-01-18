@@ -18,4 +18,4 @@ Runner:
 
 Usage:
 
-- Push to `main` or create a tag `v*` to trigger the workflow. The job will build the image and push two tags: `latest` and the commit SHA.
+- Push to `main` to trigger a build of the default branch, or create a tag matching `v*` to trigger a release build. In both cases, the job will build the image and push two tags: `latest` and the commit SHA (version tags do not currently produce additional image tags).
