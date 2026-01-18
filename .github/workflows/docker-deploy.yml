@@ -12,7 +12,7 @@ on:
 jobs:
   build-and-push:
     name: Build and Push Docker image
-    runs-on: [self-hosted, evolto3-runner]
+    runs-on: [evolto3-redis-runner]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
