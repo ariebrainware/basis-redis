@@ -1,6 +1,5 @@
 # Docker deploy CI
 
-
 This repository includes a GitHub Actions workflow to build and push the Docker image to GitHub Container Registry (GHCR).
 
 Image name:
@@ -19,3 +18,9 @@ Runner:
 Usage:
 
 - Push to `main` to trigger a build of the default branch, or create a tag matching `v*` to trigger a release build. In both cases, the job will build the image and push two tags: `latest` and the commit SHA (version tags do not currently produce additional image tags).
+
+Redis runtime configuration:
+
+- The deploy step creates/uses a Docker network named `baota_net` and runs the container attached to that network.
+- Set the repository secret `REDIS_PASSWORD` with the desired Redis password. The workflow will pass this secret into the container and start Redis with `--requirepass` to enforce authentication.
+
