@@ -39,4 +39,30 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
-            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+
+      - name: Deploy to self-hosted runner
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+        run: |
+          set -euo pipefail
+          IMAGE=ghcr.io/${{ github.repository }}:${{ github.sha }}
+          LATEST=ghcr.io/${{ github.repository }}:latest
+
+          echo "Logging in to GitHub Container Registry"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+          echo "Pulling image $IMAGE (fallback to latest)"
+          if ! docker pull "$IMAGE"; then
+            docker pull "$LATEST"
+            IMAGE="$LATEST"
+          fi
+
+          echo "Stopping existing container if present"
+          docker rm -f basis-redis || true
+
+          echo "Running container basis-redis"
+          docker run -d \
+            --name basis-redis \
+            --restart unless-stopped \
+            -v /var/lib/basis-redis-data:/data \
+            -p 6379:6379 \
+            "$IMAGE"
