@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${REDIS_IMAGE:-basis-redis:local}
+    container_name: basis-redis-local
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-localredispassword}
+    volumes:
+      - ${REDIS_DATA_DIR:-./data}:/data
+    restart: unless-stopped
